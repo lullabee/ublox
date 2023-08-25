@@ -3727,13 +3727,39 @@ impl<'a> core::iter::Iterator for DwrdIter<'a> {
     }
 }
 
+#[ubx_extend_bitflags]
+#[ubx(from, rest_reserved)]
+bitflags! {
+    pub struct NavHpPosEcefFlags: u8 {
+        const INVALID = 0x01;
+    }
+}
+
+#[ubx_packet_recv]
+#[ubx(class = 0x01, id = 0x13, fixed_payload_len = 28)]
+struct NavHpPosEcef {
+    version: u8,
+    reserved1: [u8; 3],
+    itow: u32, // ms
+    ecef_x: i32, // cm
+    ecef_y: i32, // cm
+    ecef_z: i32, // cm
+    ecef_hp_x: i8, // 0.1 mm
+    ecef_hp_y: i8, // 0.1 mm
+    ecef_hp_z: i8, // 0.1 mm
+    #[ubx(map_type = StdevFlags)]
+    flags : u8,
+    s_acc: u32, // 0.1 mm
+}
+
+
 #[ubx_packet_recv]
 #[ubx(class = 0x01, id = 0x11, fixed_payload_len = 20)]
 struct NavVelECEF {
     itow: u32,
     ecef_vx: i32,
     ecef_vy: i32,
-    ecef_vz: u32,
+    ecef_vz: i32,
     s_acc: u32,
 }
 
@@ -3901,7 +3927,6 @@ define_recv_packets!(
         NavRelPosNed,
         NavVelNed,
         NavHpPosLlh,
-        NavHpPosEcef,
         NavTimeUTC,
         NavTimeLs,
         NavSat,
@@ -3916,41 +3941,64 @@ define_recv_packets!(
         AlpSrv,
         AckAck,
         AckNak,
+        AlpSrv,
+        CfgAnt,
         CfgItfm,
+        CfgNav5,
+        CfgOdo,
         CfgPrtI2c,
         CfgPrtSpi,
         CfgPrtUart,
-        CfgNav5,
-        CfgAnt,
         CfgTmode2,
         CfgTmode3,
         CfgTp5,
         CfgValGetResponse,
+        EsfIns,
+        EsfMeas,
+        EsfRaw,
+        HnrPvt,
+        InfDebug,
         InfError,
-        InfWarning,
         InfNotice,
         InfTest,
-        InfDebug,
-        RxmRawx,
-        TimTp,
-        TimTm2,
-        MonVer,
+        InfWarning,
+        MgaAck,
+        MgaGloEph,
+        MgaGpsEph,
+        MgaGpsEPH,
+        MgaGpsIono,
         MonGnss,
         MonHw,
+        MonVer,
         RxmRtcm,
         EsfMeas,
         EsfIns,
-        HnrAtt,
-        HnrIns,
         HnrPvt,
         NavAtt,
         NavClock,
+        NavDop,
+        NavEoe,
+        NavHpPosEcef,
+        NavHpPosLlh,
+        NavOdo,
+        NavPosLlh,
+        NavPosVelTime,
+        NavRelPosNed,
+        NavSat,
+        NavSolution,
+        NavStatus,
+        NavSvIn,
+        NavTimeLs,
+        NavTimeUTC,
         NavVelECEF,
-        MgaGpsEPH,
+        NavVelNed,
+        RxmRawx,
+        RxmRtcm,
         RxmSfrbx,
-        EsfRaw,
         TimSvin,
         SecUniqId,
+        TimTm2,
+        TimTp,
     }
 );
 
