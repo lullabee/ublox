@@ -3726,31 +3726,7 @@ impl<'a> core::iter::Iterator for DwrdIter<'a> {
             .map(|bytes| u32::from_le_bytes(bytes.try_into().unwrap()))
     }
 }
-
-#[ubx_extend_bitflags]
-#[ubx(from, rest_reserved)]
-bitflags! {
-    pub struct NavHpPosEcefFlags: u8 {
-        const INVALID = 0x01;
-    }
-}
-
-#[ubx_packet_recv]
-#[ubx(class = 0x01, id = 0x13, fixed_payload_len = 28)]
-struct NavHpPosEcef {
-    version: u8,
-    reserved1: [u8; 3],
-    itow: u32, // ms
-    ecef_x: i32, // cm
-    ecef_y: i32, // cm
-    ecef_z: i32, // cm
-    ecef_hp_x: i8, // 0.1 mm
-    ecef_hp_y: i8, // 0.1 mm
-    ecef_hp_z: i8, // 0.1 mm
-    #[ubx(map_type = NavHpPosEcefFlags)]
-    flags : u8,
-    s_acc: u32, // 0.1 mm
-}
+ 
 
 
 #[ubx_packet_recv]
@@ -3919,29 +3895,9 @@ pub enum CfgReadLayer {
 define_recv_packets!(
     enum PacketRef {
         _ = UbxUnknownPacketRef,
-        NavPosLlh,
-        NavStatus,
-        NavDop,
-        NavPvt,
-        NavSolution,
-        NavRelPosNed,
-        NavVelNed,
-        NavHpPosLlh,
-        NavTimeUTC,
-        NavTimeLs,
-        NavSat,
-        NavEoe,
-        NavOdo,
-        NavSvIn,
-        CfgOdo,
-        MgaAck,
-        MgaGpsIono,
-        MgaGpsEph,
-        MgaGloEph,
         AlpSrv,
         AckAck,
         AckNak,
-        AlpSrv,
         CfgAnt,
         CfgItfm,
         CfgNav5,
@@ -3970,10 +3926,6 @@ define_recv_packets!(
         MonGnss,
         MonHw,
         MonVer,
-        RxmRtcm,
-        EsfMeas,
-        EsfIns,
-        HnrPvt,
         NavAtt,
         NavClock,
         NavDop,
@@ -3982,7 +3934,7 @@ define_recv_packets!(
         NavHpPosLlh,
         NavOdo,
         NavPosLlh,
-        NavPosVelTime,
+        NavPvt,
         NavRelPosNed,
         NavSat,
         NavSolution,
